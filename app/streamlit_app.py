@@ -94,8 +94,8 @@ Ce projet est un classifieur de radiographies pulmonaires capable de distinguer 
 | Classe | Description |
 |---|---|
 | **NORMAL** | Poumon sain, pas de pathologie détectée |
-| **BACTERIA** | Pneumonie bactérienne — consolidations lobaires |
-| **VIRUS** | Pneumonie virale — infiltrats bilatéraux diffus |
+| **BACTERIA** | Pneumonie bactérienne |
+| **VIRUS** | Pneumonie virale |
 
 #### Démarche
 
