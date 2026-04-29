@@ -11,7 +11,7 @@ tags:
 - medical-imaging
 - deep-learning
 pinned: false
-short_description: Détection de pneumonie sur radiographie thoracique — EfficientNet-B0
+short_description: Pneumonia detection from chest X-rays
 license: mit
 ---
 
