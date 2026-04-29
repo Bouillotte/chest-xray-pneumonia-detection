@@ -133,7 +133,25 @@ Lancer l'entraînement :
 python models/train.py
 ```
 
-Les métriques sont enregistrées via MLflow. Un checkpoint est sauvegardé à chaque nouveau minimum de validation loss.
+Les métriques sont enregistrées via MLflow. Un checkpoint est sauvegardé à chaque nouveau maximum de val_acc.
+
+---
+
+## Limites connues
+
+**Grad-CAM et localisation anatomique**
+
+Les cartes d'activation Grad-CAM mettent parfois en évidence des zones en dehors des poumons (diaphragme, colonne vertébrale, bords de l'image). Ce comportement est attendu et s'explique par plusieurs facteurs :
+
+- Le modèle n'a aucune connaissance anatomique explicite : il apprend des patterns statistiquement corrélés à chaque classe, pas nécessairement les structures que regarderait un radiologue.
+- Le dataset présente des biais visuels : taille de la cage thoracique (liée à l'âge), position du diaphragme, format des images — autant de signaux parasites que le modèle peut exploiter.
+- Le fine-tuning est partiel (3 blocs sur 7) : les premières couches restent des détecteurs de features génériques issus d'ImageNet.
+
+Pour des activations anatomiquement fiables, il faudrait soit segmenter les poumons en amont, soit superviser la localisation avec des masques annotés.
+
+**Données**
+
+Le split val officiel du dataset Kaggle ne contient que 16 images — inutilisable comme signal de validation. L'entraînement utilise un split stratifié 85/15 reconstruit depuis train + val.
 
 ---
 
