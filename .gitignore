@@ -1,0 +1,29 @@
+# Environnement virtuel
+.venv/
+venv/
+env/
+
+# Variables d'environnement (contient des chemins/secrets locaux)
+.env
+
+# Cache Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Résultats générés (figures d'évaluation)
+results/
+
+# MLflow — tracking local, propre à chaque machine
+mlruns/
+
+# Artefacts IDE et OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Artefacts internes Claude Code
+dev/
+.claude/worktrees/
