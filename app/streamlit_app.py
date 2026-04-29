@@ -79,11 +79,11 @@ if fichier_upload is not None:
 
     with col_radio:
         st.subheader("📷 Radiographie originale")
-        st.image(image, use_column_width=True)
+        st.image(image, use_container_width=True)
 
     with col_cam:
         st.subheader("🔥 Carte d'activation Grad-CAM")
-        st.image(img_gradcam, use_column_width=True)
+        st.image(img_gradcam, use_container_width=True)
         st.caption("Les zones en rouge correspondent aux régions déterminantes pour la prédiction.")
 
     with col_proba:

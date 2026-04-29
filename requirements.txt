@@ -9,3 +9,5 @@ python-dotenv
 uvicorn
 fastapi
 python-multipart
+pydantic
+mlflow

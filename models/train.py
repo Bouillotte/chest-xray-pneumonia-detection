@@ -101,7 +101,9 @@ def train_model(
         save_path:   Chemin de sauvegarde du meilleur checkpoint.
         run_name:    Nom de l'expérience MLflow (optionnel).
     """
-    os.makedirs(os.path.dirname(save_path), exist_ok=True)
+    parent = os.path.dirname(save_path)
+    if parent:
+        os.makedirs(parent, exist_ok=True)
     meilleure_val_loss = float("inf")
 
     with mlflow.start_run(run_name=run_name):

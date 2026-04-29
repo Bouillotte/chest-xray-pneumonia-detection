@@ -52,11 +52,11 @@ class ChestXRayDataset(Dataset):
     def _charger_echantillons(self) -> None:
         """Parcourt le répertoire de la partition et construit la liste (chemin, label)."""
         rep_normal = self.data_dir / self.split / "NORMAL"
-        for chemin in sorted(rep_normal.glob("*.jpeg")):
+        for chemin in sorted(rep_normal.glob("*.jpeg")) + sorted(rep_normal.glob("*.jpg")):
             self.samples.append((chemin, 0))
 
         rep_pneumonie = self.data_dir / self.split / "PNEUMONIA"
-        for chemin in sorted(rep_pneumonie.glob("*.jpeg")):
+        for chemin in sorted(rep_pneumonie.glob("*.jpeg")) + sorted(rep_pneumonie.glob("*.jpg")):
             label = 1 if "bacteria" in chemin.stem else 2
             self.samples.append((chemin, label))
 
