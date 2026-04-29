@@ -11,3 +11,5 @@ fastapi
 python-multipart
 pydantic
 mlflow
+scikit-learn
+seaborn

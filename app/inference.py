@@ -3,6 +3,7 @@
 import torch
 import torch.nn as nn
 import torchvision.models as models
+import torchvision.transforms.functional as TF
 from PIL import Image
 
 from data.transforms import get_val_transforms
@@ -19,15 +20,6 @@ _val_transforms = get_val_transforms()
 
 
 def load_model(checkpoint_path: str, device: torch.device) -> nn.Module:
-    """Charge un EfficientNet-B0 fine-tuné depuis un checkpoint PyTorch.
-
-    Args:
-        checkpoint_path: Chemin vers le fichier ``.pth`` produit lors de l'entraînement.
-        device:          Dispositif cible (CPU ou CUDA).
-
-    Returns:
-        Modèle en mode évaluation, prêt à l'inférence.
-    """
     model = models.efficientnet_b0(weights=None)
     model.classifier[1] = nn.Linear(model.classifier[1].in_features, len(CLASSES))
     checkpoint = torch.load(checkpoint_path, map_location=device)
@@ -37,29 +29,27 @@ def load_model(checkpoint_path: str, device: torch.device) -> nn.Module:
     return model
 
 
-def predict(model: nn.Module, image: Image.Image, device: torch.device) -> dict:
+def predict(model: nn.Module, image: Image.Image, device: torch.device, tta: bool = True) -> dict:
     """Prédit la classe d'une radiographie pulmonaire.
 
     Args:
         model:  Modèle EfficientNet-B0 chargé via :func:`load_model`.
         image:  Image PIL en mode RGB.
         device: Dispositif sur lequel exécuter l'inférence.
-
-    Returns:
-        Dictionnaire contenant :
-
-        - ``"classe"``       — identifiant de la classe prédite (ex. ``"BACTERIA"``).
-        - ``"label"``        — libellé avec emoji (ex. ``"🦠 Pneumonie bactérienne"``).
-        - ``"confiance"``    — score softmax de la classe prédite (entre 0 et 1).
-        - ``"probabilites"`` — scores softmax pour chacune des 3 classes.
+        tta:    Si True, moyenne les prédictions sur l'image originale et son flip horizontal
+                (Test Time Augmentation). Améliore légèrement la robustesse sans réentraîner.
     """
-    tensor = _val_transforms(image).unsqueeze(0).to(device)
+    images = [image]
+    if tta:
+        images.append(TF.hflip(image))
+
+    tensors = torch.stack([_val_transforms(img) for img in images]).to(device)
+
     with torch.no_grad():
-        logits = model(tensor)
-        probs = torch.softmax(logits, dim=1).squeeze()
+        probs = torch.softmax(model(tensors), dim=1).mean(dim=0)
 
     pred_idx = probs.argmax().item()
-    classe = CLASSES[pred_idx]
+    classe   = CLASSES[pred_idx]
 
     return {
         "classe":       classe,
