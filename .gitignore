@@ -17,13 +17,16 @@ results/
 
 # MLflow — tracking local, propre à chaque machine
 mlruns/
+mlflow.db
+
+# Modèles intermédiaires (seul best_model.pth est versionné)
+models/best_model_ft.pth
+
+# Claude Code
+.claude/
 
 # Artefacts IDE et OS
 .vscode/
 .idea/
 .DS_Store
 Thumbs.db
-
-# Artefacts internes Claude Code
-dev/
-.claude/worktrees/
